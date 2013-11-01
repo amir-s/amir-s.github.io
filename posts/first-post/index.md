@@ -3,11 +3,11 @@ tags: introduction
 url: first-post
 date: Sat Nov 02 2013 00:00:00 GMT+0330 (Iran Standard Time)
 ------------------------
-It's been a while that I wish to start blogging. Everytime I decided to install a blog engine such as wordpress, I said to myself "It is not what I want"!
+It's been a while that I wish to start blogging. Every time I decided to install a blog engine such as wordpress, I said to myself "It is not what I want"!
 
-After the disapointing release of [Ghost](http://tryghost.org) and testing [Jekyll](http://jekyllrb.com), I've came up with this idea to create a NodeJS tool which help bloggers to write static blogs fast, minimalistic and dead simple.
+After the disappointing release of [Ghost](http://tryghost.org) and testing [Jekyll](http://jekyllrb.com), I've came up with this idea to create a NodeJS tool which help bloggers to write static blogs fast, minimalistic and dead simple.
 
-`pressjs` is a very simple tool to generate static blog pages. It has a few fatures now, but it will be developed and more features will be added very soon.
+`pressjs` is a very simple tool to generate static blog pages. It has a few features now, but it will be developed and more features will be added very soon.
 In order to user `pressjs`, you must have NodeJS installed first. Then install `pressjs` from `npm`:
 
 	npm install pressjs -g
@@ -18,7 +18,7 @@ And you are all set! Create a folder for your blog:
 	mkdir blog && cd blog
 
 
-Use this command to initialise your blog:
+Use this command to initialize your blog:
 
 	pressjs init
 
