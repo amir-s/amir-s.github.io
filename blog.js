@@ -2,7 +2,7 @@
     "title": "Amir Saboury",
     "pageTitle": "Amir Saboury's personal blog",
     "description": "sharing ideas about computer science, software eng. and geeky stuff!",
-    "url": "http://localhost:3000/",
+    "url": "http://amir-s.github.io/",
     "author": {
         "name": {
             "first": "Amir",
