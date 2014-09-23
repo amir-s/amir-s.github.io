@@ -1,13 +1,16 @@
 title: First Post
 tags: introduction
 url: first-post
-date: Sat Nov 02 2013 00:00:00 GMT+0330 (Iran Standard Time)
+date: Tue Sep 23 2014 00:00:00 GMT-0400 (EDT)
 ------------------------
-It's been a while that I wish to start blogging. Every time I decided to install a blog engine such as wordpress, I said to myself "It is not what I want"!
+It's been a while that I wish to start blogging. I've wrote a tool called [PressJS](https://github.com/amir-s/pressjs) like one year ago to start creating and writing a blog using that tool. But I failed due to some reasons.
 
-After the disappointing release of [Ghost](http://tryghost.org) and testing [Jekyll](http://jekyllrb.com), I've came up with this idea to create a NodeJS tool which help bloggers to write static blogs fast, minimalistic and dead simple.
+Well, done is better than perfect; So I'm going to start blogging anyway using [PressJS](https://github.com/amir-s/pressjs) while I'm developing it.
 
-`pressjs` is a very simple tool to generate static blog pages. It has a few features now, but it will be developed and more features will be added very soon.
+[PressJS](https://github.com/amir-s/pressjs) is not going to be YABP (Yet Another Blogging Platform). This is just a personal project that I want to develope and it's main goal is to be minimalistic and dead simple. It has a few features now, but it will be developed and more features will be added very soon.
+
+If you are interested in using and developing it, feel free to fork and send pull-requests.
+
 In order to user `pressjs`, you must have NodeJS installed first. Then install `pressjs` from `npm`:
 
 	npm install pressjs -g
