@@ -1,0 +1,2 @@
+geekozy.com static blog
+================
