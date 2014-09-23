@@ -1,8 +1,8 @@
 {
-    "title": "Amir Saboury",
+    "title": "/GEEKOZY/",
     "pageTitle": "Amir Saboury's personal blog",
-    "description": "sharing ideas about computer science, software eng. and geeky stuff!",
-    "url": "http://amir-s.github.io/",
+    "description": "sharing ideas about computer science, programing, and geeky stuff!",
+    "url": "http://geekozy.com/",
     "author": {
         "name": {
             "first": "Amir",
@@ -19,7 +19,11 @@
         "post": "./theme/post.html"
     },
     "comments": {
-        "enabled": true,
+        "enabled": false,
         "disqus_shortname": "amirsaboury"
+    },
+    "ga": {
+        "enabled": true,
+        "tracking_id": "UA-55074548-1"
     }
 }

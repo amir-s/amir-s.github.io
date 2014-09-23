@@ -81,9 +81,9 @@
       </div>
     </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="js/jquery-1.10.2.min.js"></script>
+    <script src="{{=$.url('theme/js/jquery-1.10.2.min.js')}}"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
+    <script src="{{=$.url('theme/js/bootstrap.min.js')}}"></script>
 
     <!-- Twitter Social -->
     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="http://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
@@ -97,18 +97,32 @@
     })();
     </script>
 	
-	{{ if (blog.comments.enabled && blog.comments.disqus_shortname != '') { }}
-	<script type="text/javascript">
-	var disqus_shortname = '{{= blog.comments.disqus_shortname }}';
-	 
-	/* * * DON'T EDIT BELOW THIS LINE * * */
-	(function () {
-	var s = document.createElement('script'); s.async = true;
-	s.type = 'text/javascript';
-	s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
-	(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-	}());
-	</script>
-	{{ } }}
+  {{ if (blog.comments.enabled && blog.comments.disqus_shortname != '') { }}
+  <script type="text/javascript">
+  var disqus_shortname = '{{= blog.comments.disqus_shortname }}';
+   
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function () {
+  var s = document.createElement('script'); s.async = true;
+  s.type = 'text/javascript';
+  s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  }());
+  </script>
+  {{ } }}
+
+	{{ if (blog.ga.enabled && blog.ga.tracking_id != '') { }}
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', '{{=blog.ga.tracking_id}}', 'auto');
+    ga('send', 'pageview');
+
+  </script>
+  {{ } }}
+
   </body>
 </html>
