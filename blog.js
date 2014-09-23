@@ -19,7 +19,7 @@
         "post": "./theme/post.html"
     },
     "comments": {
-        "enabled": false,
+        "enabled": true,
         "disqus_shortname": "amirsaboury"
     },
     "ga": {
