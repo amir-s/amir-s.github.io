@@ -5,6 +5,16 @@ date: Tue Sep 23 2014 00:00:00 GMT-0400 (EDT)
 ------------------------
 It's been a while that I wish to start blogging. I've wrote a tool called [PressJS](https://github.com/amir-s/pressjs) like one year ago to start creating and writing a blog using that tool. But I failed due to some reasons.
 
+About myself
+-----
+My name is Amir, I was born in 14th April, 1990. Now I am a student of [Ecole Polytechnique de Montreal](http://polymtl.ca) in Canada, studying Computer Engeering. [This](http://amir.saboury.net) is my (kind of) academic web-page.
+
+I love Programing, [Photography](http://instagram.com/amir.saboury), and pretty much everything in between!
+
+
+PressJS
+------
+
 Well, done is better than perfect; So I'm going to start blogging anyway using [PressJS](https://github.com/amir-s/pressjs) while I'm developing it.
 
 [PressJS](https://github.com/amir-s/pressjs) is not going to be YABP (Yet Another Blogging Platform). This is just a personal project that I want to develope and it's main goal is to be minimalistic and dead simple. It has a few features now, but it will be developed and more features will be added very soon.
