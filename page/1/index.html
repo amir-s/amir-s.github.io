@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Amir Saboury&#39;s personal blog</title>
+    <title>Geekozy / Amir Saboury&#39;s blog!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="http://geekozy.com/theme/css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -25,6 +25,147 @@
       <h6><a href="http://geekozy.com/"><span>&nbsp;sharing ideas about computer science, programing, and geeky stuff!&nbsp;</span></a></h6>
     </div>
     <div class="container">
+      
+
+      <div class="post container">
+        <div class="title">
+          <h2><a href="http://geekozy.com/posts/producer-consumer-in-javascript">Producer-Consumer in JavaScript</a></h2>
+          <div class="socialbuzz">
+            <!-- Twitter -->
+            <a href="https://twitter.com/share" class="twitter-share-button" data-via="as32">Tweet</a>
+            <!-- Google + -->
+            <g:plusone class="plusone" size="medium"></g:plusone>
+          </div>
+        </div>
+        <div class="post-detail">
+          <p>Wednesday 24<sup>th</sup> September 2014, By Amir Saboury, Tags: <a href="http://geekozy.com/tags/javascript">#javascript</a> -- <a href="http://geekozy.com/posts/producer-consumer-in-javascript#disqus_thread" data-disqus-identifier="producer-consumer-in-javascript"></a></p>
+        </div>
+        <div class="post-content"><p>Couple of month ago, I wrote a XMPP-bot which acts like a chat-room. It simply sends the messages that it received to the other people that have added the bot. There is already online services for this purpose like <a href="http://partych.at">PartyChat</a>, but as I wanted something more customized I started to write my own.</p>
+<p>I used <a href="http://www.nodejs.org">NodeJS</a> to write bot. using <a href="https://github.com/node-xmpp/node-xmpp">Node-XMPP</a> module made the whole process very easy. The only problem was when a lot of users try to send messages. First, I had used a simple logic to broadcast messages to the other users, which was fine when there was no rush in incoming messages:</p>
+<pre><code class="lang-javascript">xmpp.on(<span class="string">'chat'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(from, body)</span> {</span>
+    users.forEcah(<span class="function"><span class="keyword">function</span> <span class="params">(user)</span> {</span>
+        xmpp.send(user, <span class="string">'['</span> + from + <span class="string">']: '</span> + body);
+    });
+});</code></pre>
+<p>When a lot of messages came at the same time, the not all of them had  sent to the other users. So I needed to change the broadcast strategy.</p>
+<p>I needed to schedule sending out messages in a way that there will be enough delay between each <code>xmpp.send</code> call. This is a kind of <a href="http://en.wikipedia.org/wiki/Producer%E2%80%93consumer_problem">Producer-Consumer Problem</a>.</p>
+<p>I wanted a module that I can work with it like this:</p>
+<pre><code>var queue = new Queue(consumerFunction, delay)<span class="comment">;</span>
+queue<span class="preprocessor">.push</span>(something)<span class="comment">;</span>
+queue<span class="preprocessor">.push</span>(somethingElse)<span class="comment">;</span></code></pre>
+<p>And it automatically feed the input into the <code>consumerFunction</code> with the specified amount of delay.</p>
+<p>First we should create a <code>Queue.js</code> file in our project and fill it with necessary lines:</p>
+<pre><code><span class="keyword">var</span> Queue = <span class="function"><span class="keyword">function</span> <span class="params">(fn, delay)</span> <span class="comment">{
+}</span>
+<span class="title">module</span>.<span class="title">exports</span> = <span class="title">Queue</span>;</span></code></pre>
+<p>Every <code>Queue</code> instanced that will be <code>new</code>ed is a new queue. We have to keep the consumer function and the delay for each created queue in itself. And also we need an array in which we keep our stuff to be consumed later:</p>
+<pre><code>var Queue = function (<span class="keyword">fn</span>, delay) {
+    this.<span class="function"><span class="keyword">fn</span> = <span class="title">fn</span>;
+    <span class="title">this</span>.<span class="title">delay</span> = <span class="title">delay</span>;
+    <span class="title">this</span>.<span class="title">Q</span> = [];
+}
+<span class="title">module</span>.<span class="title">exports</span> = <span class="title">Queue</span>;</code></pre>
+<p>As we&#39;ve seen before, we also need a <code>push</code> function on our <code>Qeueu</code>. This function should first see if there is a consumption job going on already or not. If there is, then we can just simply push the thing into the array and let the consumer consume it. If there isn&#39;t, we should add the item into the array and then notify the consumer to process that stuff. We can add a flag to our <code>Queue</code> which keeps track of business of the queue.</p>
+<pre><code>var Queue = function (fn, delay) {
+    <span class="keyword">this</span><span class="variable">.fn</span> = fn;
+    <span class="keyword">this</span><span class="variable">.delay</span> = delay;
+    <span class="keyword">this</span><span class="variable">.Q</span> = [];
+    <span class="keyword">this</span><span class="variable">.busy</span> = <span class="literal">false</span>;
+    <span class="keyword">this</span><span class="variable">.push</span> = function (item) {
+        <span class="keyword">this</span><span class="variable">.Q</span><span class="variable">.push</span>(item);
+        <span class="keyword">if</span> (!<span class="keyword">this</span><span class="variable">.busy</span>) <span class="keyword">this</span><span class="variable">.notify</span>();
+    }
+    <span class="keyword">this</span><span class="variable">.notify</span> = function () {
+        <span class="keyword">this</span><span class="variable">.busy</span> = <span class="literal">true</span>;
+        var item = <span class="keyword">this</span><span class="variable">.Q</span><span class="variable">.shift</span>();
+        <span class="keyword">this</span><span class="variable">.fn</span>(item);
+        <span class="keyword">this</span><span class="variable">.busy</span> = <span class="literal">false</span>;
+    }
+}
+module<span class="variable">.exports</span> = Queue;</code></pre>
+<p>Now the <code>notify</code> function should do the rest of the job. It should consume the first element of array by feeding it into the consumer function (which named <code>this.fn</code> here), and then to schedule the next call of itself to see if there is any job remains.</p>
+<p>In order to schedule the next call, we should use <code>setTimeout</code> function. As you may know, <code>this</code> pointer does not preserved in nested function calls. So we should store our <code>this</code> into another variable to access <code>this.fn</code> into a nested function. Here I used the variable name <code>self</code> which is more convenient.</p>
+<pre><code>var Queue = function (fn, delay) {
+    <span class="keyword">this</span><span class="variable">.fn</span> = fn;
+    <span class="keyword">this</span><span class="variable">.delay</span> = delay;
+    <span class="keyword">this</span><span class="variable">.Q</span> = [];
+    <span class="keyword">this</span><span class="variable">.busy</span> = <span class="literal">false</span>;
+    <span class="keyword">this</span><span class="variable">.push</span> = function (item) {
+        <span class="keyword">this</span><span class="variable">.Q</span><span class="variable">.push</span>(item);
+        <span class="keyword">if</span> (!<span class="keyword">this</span><span class="variable">.busy</span>) <span class="keyword">this</span><span class="variable">.notify</span>();
+    }
+    <span class="keyword">this</span><span class="variable">.notify</span> = function () {
+        <span class="keyword">this</span><span class="variable">.busy</span> = <span class="literal">true</span>;
+        var item = <span class="keyword">this</span><span class="variable">.Q</span><span class="variable">.shift</span>();
+        <span class="keyword">this</span><span class="variable">.fn</span>(item);
+        var <span class="keyword">self</span> = <span class="keyword">this</span>;
+        setTimeout(function () {
+            <span class="keyword">self</span><span class="variable">.notify</span>();
+        }, <span class="keyword">this</span><span class="variable">.delay</span>);
+        <span class="keyword">this</span><span class="variable">.busy</span> = <span class="literal">false</span>;
+    }
+}
+module<span class="variable">.exports</span> = Queue;</code></pre>
+<p>But wait! We haven&#39;t manipulate the <code>busy</code> flag very well. And what will be happen when the array become empty? We have to check first if the array is empty or not. If it is empty, then we are finished for now and we can unset the <code>busy</code> flag and rest. And if the array isn&#39;t empty, just peek an item, consume, then schedule next consumption.</p>
+<pre><code>var Queue = function (fn, delay) {
+    <span class="keyword">this</span><span class="variable">.fn</span> = fn;
+    <span class="keyword">this</span><span class="variable">.delay</span> = delay;
+    <span class="keyword">this</span><span class="variable">.Q</span> = [];
+    <span class="keyword">this</span><span class="variable">.busy</span> = <span class="literal">false</span>;
+    <span class="keyword">this</span><span class="variable">.push</span> = function (item) {
+        <span class="keyword">this</span><span class="variable">.Q</span><span class="variable">.push</span>(item);
+        <span class="keyword">if</span> (!<span class="keyword">this</span><span class="variable">.busy</span>) <span class="keyword">this</span><span class="variable">.notify</span>();
+    }
+    <span class="keyword">this</span><span class="variable">.notify</span> = function () {
+        <span class="keyword">if</span> (<span class="keyword">this</span><span class="variable">.Q</span><span class="variable">.length</span> == <span class="number">0</span>) {
+            <span class="keyword">this</span><span class="variable">.busy</span> = <span class="literal">false</span>;
+            <span class="keyword">return</span>;
+        }
+        <span class="keyword">this</span><span class="variable">.busy</span> = <span class="literal">true</span>;
+        var item = <span class="keyword">this</span><span class="variable">.Q</span><span class="variable">.shift</span>();
+        <span class="keyword">this</span><span class="variable">.fn</span>(item);
+        var <span class="keyword">self</span> = <span class="keyword">this</span>;
+        setTimeout(function () {
+            <span class="keyword">self</span><span class="variable">.notify</span>();
+        }, <span class="keyword">this</span><span class="variable">.delay</span>);
+        <span class="keyword">this</span><span class="variable">.busy</span> = <span class="literal">false</span>;
+    }
+}
+module<span class="variable">.exports</span> = Queue;</code></pre>
+<p>Well, that&#39;s all. Another thing is when we call the <code>fn</code> function in this way: <code>this.fn(item)</code> if user uses the <code>this</code> keyword in the <code>fn</code> function, their <code>this</code> will become our <code>this</code>. It is safer if we call it this way: <code>this.fn.call(null, item);</code>. Now <code>fn</code>&#39;s <code>this</code> is going to be bound to <code>null</code>.</p>
+<p>Here is the final code. This is probably not the best way to do it, but it was fun and very easy to implement.</p>
+<p>How do you test this kind of modules? Tell me in the comments and we can have a post in future about testing these stuff.</p>
+<pre><code>var Queue = function (fn, delay) {
+    <span class="keyword">this</span><span class="variable">.fn</span> = fn;
+    <span class="keyword">this</span><span class="variable">.delay</span> = delay;
+    <span class="keyword">this</span><span class="variable">.Q</span> = [];
+    <span class="keyword">this</span><span class="variable">.busy</span> = <span class="literal">false</span>;
+    <span class="keyword">this</span><span class="variable">.push</span> = function (item) {
+        <span class="keyword">this</span><span class="variable">.Q</span><span class="variable">.push</span>(item);
+        <span class="keyword">if</span> (!<span class="keyword">this</span><span class="variable">.busy</span>) <span class="keyword">this</span><span class="variable">.notify</span>();
+    }
+    <span class="keyword">this</span><span class="variable">.notify</span> = function () {
+        <span class="keyword">if</span> (<span class="keyword">this</span><span class="variable">.Q</span><span class="variable">.length</span> == <span class="number">0</span>) {
+            <span class="keyword">this</span><span class="variable">.busy</span> = <span class="literal">false</span>;
+            <span class="keyword">return</span>;
+        }
+        <span class="keyword">this</span><span class="variable">.busy</span> = <span class="literal">true</span>;
+        var item = <span class="keyword">this</span><span class="variable">.Q</span><span class="variable">.shift</span>();
+        <span class="keyword">this</span><span class="variable">.fn</span><span class="variable">.call</span>(null, item);
+        var <span class="keyword">self</span> = <span class="keyword">this</span>;
+        setTimeout(function () {
+            <span class="keyword">self</span><span class="variable">.notify</span>();
+        }, <span class="keyword">this</span><span class="variable">.delay</span>);
+        <span class="keyword">this</span><span class="variable">.busy</span> = <span class="literal">false</span>;
+    }
+}
+module<span class="variable">.exports</span> = Queue;</code></pre>
+</div>
+     
+
+      </div>
+
+
       
 
       <div class="post container">
