@@ -40,17 +40,21 @@
         <div class="post-detail">
           <p>Wednesday 24<sup>th</sup> September 2014, By Amir Saboury, Tags: <a href="http://geekozy.com/tags/javascript">#javascript</a> -- <a href="http://geekozy.com/posts/producer-consumer-in-javascript#disqus_thread" data-disqus-identifier="producer-consumer-in-javascript"></a></p>
         </div>
-        <div class="post-content"><p>Couple of month ago, I wrote a XMPP-bot which acts like a chat-room. It simply sends the messages that it received to the other people that have added the bot. There is already online services for this purpose like <a href="http://partych.at">PartyChat</a>, but as I wanted something more customized I started to write my own.</p>
+        <div class="post-content"><p>Couple of month ago, I wrote a XMPP-bot which acts like a chat-room. It simply sends all the messages that it received to the other people that have added the bot. There is already some online services for this purpose like <a href="http://partych.at">PartyChat</a>, but as I wanted something more customized so I started to write my own.</p>
 <p>I used <a href="http://www.nodejs.org">NodeJS</a> to write bot. using <a href="https://github.com/node-xmpp/node-xmpp">Node-XMPP</a> module made the whole process very easy. The only problem was when a lot of users try to send messages. First, I had used a simple logic to broadcast messages to the other users, which was fine when there was no rush in incoming messages:</p>
 <pre><code class="lang-javascript">xmpp.on(<span class="string">'chat'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(from, body)</span> {</span>
     users.forEcah(<span class="function"><span class="keyword">function</span> <span class="params">(user)</span> {</span>
         xmpp.send(user, <span class="string">'['</span> + from + <span class="string">']: '</span> + body);
     });
 });</code></pre>
-<p>When a lot of messages came at the same time, the not all of them had  sent to the other users. So I needed to change the broadcast strategy.</p>
+<p>When a lot of messages came at the same time, not all of them had sent to the other users. So I needed to change the broadcast strategy.</p>
 <p>I needed to schedule sending out messages in a way that there will be enough delay between each <code>xmpp.send</code> call. This is a kind of <a href="http://en.wikipedia.org/wiki/Producer%E2%80%93consumer_problem">Producer-Consumer Problem</a>.</p>
 <p>I wanted a module that I can work with it like this:</p>
-<pre><code>var queue = new Queue(consumerFunction, delay)<span class="comment">;</span>
+<pre><code>var consumerFunction = function (item) {
+    // consume the item
+    xmpp<span class="preprocessor">.send</span>(item<span class="preprocessor">.to</span>, item<span class="preprocessor">.body</span>)<span class="comment">;</span>
+}
+var queue = new Queue(consumerFunction, delay)<span class="comment">;</span>
 queue<span class="preprocessor">.push</span>(something)<span class="comment">;</span>
 queue<span class="preprocessor">.push</span>(somethingElse)<span class="comment">;</span></code></pre>
 <p>And it automatically feed the input into the <code>consumerFunction</code> with the specified amount of delay.</p>

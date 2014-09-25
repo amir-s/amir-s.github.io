@@ -3,7 +3,7 @@ tags: javascript
 url: producer-consumer-in-javascript
 date: Wed Sep 24 2014 00:00:00 GMT-0400 (EDT)
 ------------------------
-Couple of month ago, I wrote a XMPP-bot which acts like a chat-room. It simply sends the messages that it received to the other people that have added the bot. There is already online services for this purpose like [PartyChat](http://partych.at), but as I wanted something more customized I started to write my own.
+Couple of month ago, I wrote a XMPP-bot which acts like a chat-room. It simply sends all the messages that it received to the other people that have added the bot. There is already some online services for this purpose like [PartyChat](http://partych.at), but as I wanted something more customized so I started to write my own.
 
 I used [NodeJS](http://www.nodejs.org) to write bot. using [Node-XMPP](https://github.com/node-xmpp/node-xmpp) module made the whole process very easy. The only problem was when a lot of users try to send messages. First, I had used a simple logic to broadcast messages to the other users, which was fine when there was no rush in incoming messages:
 ```javascript
@@ -13,13 +13,17 @@ xmpp.on('chat', function (from, body) {
 	});
 });
 ```
-When a lot of messages came at the same time, the not all of them had  sent to the other users. So I needed to change the broadcast strategy.
+When a lot of messages came at the same time, not all of them had sent to the other users. So I needed to change the broadcast strategy.
 
 I needed to schedule sending out messages in a way that there will be enough delay between each `xmpp.send` call. This is a kind of [Producer-Consumer Problem](http://en.wikipedia.org/wiki/Producer%E2%80%93consumer_problem).
 
 I wanted a module that I can work with it like this:
 
 ```
+var consumerFunction = function (item) {
+	// consume the item
+	xmpp.send(item.to, item.body);
+}
 var queue = new Queue(consumerFunction, delay);
 queue.push(something);
 queue.push(somethingElse);
