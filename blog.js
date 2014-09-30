@@ -12,7 +12,7 @@
         "twitter": "as32",
         "facebook": "amir.sa"
     },
-    "pageSize": 3,
+    "pageSize": 10,
     "theme": {
         "index": "./theme/index.html",
         "tags": "./theme/tags.html",
