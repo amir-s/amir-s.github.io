@@ -2,7 +2,7 @@
     "title": "/GEEKOZY/",
     "pageTitle": "Geekozy / Amir Saboury's blog!",
     "description": "sharing ideas about computer science, programing, and geeky stuff!",
-    "url": "http://geekozy.com/",
+    "url": "http://amir-s.github.io/",
     "author": {
         "name": {
             "first": "Amir",
